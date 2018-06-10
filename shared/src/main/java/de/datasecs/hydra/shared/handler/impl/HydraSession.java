@@ -36,6 +36,8 @@ public class HydraSession extends SimpleChannelInboundHandler<Packet> implements
     public void handlerRemoved(ChannelHandlerContext context) {
         if (protocol.getSessionListener() != null) {
             protocol.callSessionListener(false, this);
+        } else if (protocol.getSessionConsumer() != null) {
+            protocol.callSessionConsumer(false, this);
         }
 
         protocol.removeSession(this);
@@ -75,5 +77,16 @@ public class HydraSession extends SimpleChannelInboundHandler<Packet> implements
     public SocketAddress getAddress() {
         SocketAddress address = channel.remoteAddress();
         return address == null ? channel.localAddress() : address;
+    }
+
+    @Override
+    public String toString() {
+        return "HydraSession{" +
+                "channel=" + channel +
+                ", protocol=" + protocol +
+                ", connected=" + channel.isActive() +
+                ", writable=" + channel.isWritable() +
+                ", address=" + getAddress() +
+                '}';
     }
 }
